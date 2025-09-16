@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClínicaSys Pro - Sistema de Gestión Clínica</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Enlace al archivo CSS externo -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+
+
+
+    <div class="toast-container position-fixed top-0 end-0 p-3"></div>
+
+    <div id="login-page" class="login-container">
+        <div class="login-card text-center">
+            <i class="bi bi-heart-pulse-fill text-primary" style="font-size: 3rem;"></i>
+            <h2 class="mt-2">ClínicaSys Pro</h2>
+            <p class="text-muted mb-4">Bienvenido al Sistema de Gestión Clínica</p>
+            <form id="loginForm" class="text-start">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Usuario</label>
+                    <input type="text" class="form-control" id="username" value="admin" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" value="admin" required>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">Recordarme</label>
+                    </div>
+                    <a href="#" class="form-text">¿Olvidó su contraseña?</a>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">Ingresar</button>
+                </div>
+                <div id="login-error" class="text-danger mt-3 text-center" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="main-app" style="display: none;">
+        <div class="sidebar d-flex flex-column flex-shrink-0 p-3">
+            <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
+                <i class="bi bi-heart-pulse-fill text-primary fs-2 me-2"></i>
+                <span class="fs-4 sidebar-brand-text" style="color: var(--dark-color);">ClínicaSys</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item"><a href="#" class="nav-link active" data-page="dashboard"><i class="bi bi-grid-1x2-fill"></i><span class="nav-link-text">Dashboard</span></a></li>
+                <li class="nav-item" data-role="recepcionista,admin"><a href="#" class="nav-link" data-page="pacientes"><i class="bi bi-people-fill"></i><span class="nav-link-text">Pacientes</span></a></li>
+                <li class="nav-item" data-role="doctor,admin"><a href="#" class="nav-link" data-page="historial"><i class="bi bi-file-earmark-medical-fill"></i><span class="nav-link-text">Historia Clínica</span></a></li>
+                <li class="nav-item" data-role="recepcionista,doctor,admin"><a href="#" class="nav-link" data-page="citas"><i class="bi bi-calendar-check-fill"></i><span class="nav-link-text">Citas</span></a></li>
+                <li class="nav-item" data-role="admin"><a href="#" class="nav-link" data-page="servicios"><i class="bi bi-clipboard2-pulse-fill"></i><span class="nav-link-text">Servicios y Oficinas</span></a></li>
+                <li class="nav-item" data-role="admin"><a href="#" class="nav-link" data-page="usuarios"><i class="bi bi-person-badge-fill"></i><span class="nav-link-text">Usuarios</span></a></li>
+                <li class="nav-item" data-role="admin"><a href="#" class="nav-link" data-page="reportes"><i class="bi bi-file-earmark-bar-graph-fill"></i><span class="nav-link-text">Reportes</span></a></li>
+            </ul>
+            <hr>
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://i.pravatar.cc/40?u=admin" alt="" width="32" height="32" class="rounded-circle me-2">
+                    <strong id="userName" style="color: var(--dark-color);">Admin General</strong>
+                </a>
+                <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser">
+                    <li><a class="dropdown-item" href="#">Perfil</a></li>
+                    <li><a class="dropdown-item" href="#" id="darkModeToggle"><i class="bi bi-moon-stars-fill me-2"></i><span>Modo Oscuro</span></a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#" id="logout-btn">Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <div id="dashboard" class="page active">
+                <h1 class="h2 mb-4">Dashboard</h1>
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stat-card">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="icon bg-primary me-3"><i class="bi bi-people-fill"></i></div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Pacientes Activos</h6>
+                                    <h4 class="mb-0" id="stat-pacientes">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stat-card">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="icon bg-success me-3"><i class="bi bi-calendar-check-fill"></i></div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Citas Hoy</h6>
+                                    <h4 class="mb-0" id="stat-citas">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stat-card">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="icon bg-info me-3"><i class="bi bi-clipboard2-pulse-fill"></i></div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Consultas del Mes</h6>
+                                    <h4 class="mb-0" id="stat-consultas">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stat-card">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="icon bg-warning me-3"><i class="bi bi-cash-coin"></i></div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Ingresos del Mes</h6>
+                                    <h4 class="mb-0" id="stat-ingresos">$0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="card">
+                            <div class="card-header">Consultas por Mes</div>
+                            <div class="card-body"><canvas id="consultasChart"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="card">
+                            <div class="card-header">Distribución de Citas</div>
+                            <div class="card-body"><canvas id="citasChart"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pacientes" class="page">
+                <div id="pacientes-table-view">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                        <h1 class="h2">Gestión de Pacientes</h1>
+                        <button type="button" class="btn btn-primary" id="btnNuevoPaciente"><i class="bi bi-plus-circle me-2"></i>Nuevo Paciente</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-8"><input type="text" id="pacienteSearch" class="form-control" placeholder="Buscar por DNI, nombre o apellido..."></div>
+                                <div class="col-md-2"><select id="pacienteFilterGenero" class="form-select"><option value="">Género</option><option value="Masculino">Masculino</option><option value="Femenino">Femenino</option></select></div>
+                                <div class="col-md-2"><input type="number" id="pacienteFilterEdad" class="form-control" placeholder="Edad"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>DNI</th>
+                                    <th>Paciente</th>
+                                    <th>Edad</th>
+                                    <th>Género</th>
+                                    <th>Teléfono</th>
+                                    <th>Última Consulta</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pacientes-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="paciente-profile-view" style="display:none;">
+                </div>
+            </div>
+
+            <div id="citas" class="page">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                    <h1 class="h2">Agenda de Citas</h1>
+                    <button type="button" class="btn btn-primary" id="btnAgendarCita"><i class="bi bi-calendar-plus me-2"></i>Agendar Cita</button>
+                </div>
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary" id="prevMonthBtn"><i class="bi bi-chevron-left"></i></button>
+                            <button class="btn btn-sm btn-outline-secondary" id="nextMonthBtn"><i class="bi bi-chevron-right"></i></button>
+                            <strong id="calendarTitle" class="ms-3"></strong>
+                        </div>
+                        <div class="d-flex">
+                            <select id="citaFilterDoctor" class="form-select form-select-sm me-2" style="width: 150px;"></select>
+                            <select id="citaFilterOficina" class="form-select form-select-sm" style="width: 150px;"></select>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="calendar-header d-grid" style="grid-template-columns: repeat(7, 1fr); gap: 5px; font-weight: 600; text-align:center;">
+                            <div>Dom</div>
+                            <div>Lun</div>
+                            <div>Mar</div>
+                            <div>Mié</div>
+                            <div>Jue</div>
+                            <div>Vie</div>
+                            <div>Sáb</div>
+                        </div>
+                        <div class="calendar-grid" id="calendar-grid-body"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="historial" class="page">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                    <h1 class="h2">Historia Clínica</h1>
+                    <button type="button" class="btn btn-primary" id="btnNuevaConsulta"><i class="bi bi-plus-circle me-2"></i>Nueva Consulta</button>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <input type="text" id="historialSearch" class="form-control" placeholder="Buscar por DNI o nombre del paciente...">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Paciente</th>
+                                <th>Médico</th>
+                                <th>Motivo de Consulta</th>
+                                <th class="d-none d-lg-table-cell">Diagnóstico Principal</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historial-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="servicios" class="page">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                    <h1 class="h2">Servicios y Oficinas</h1>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" id="btnNuevoServicio"><i class="bi bi-plus-circle me-2"></i>Nuevo Servicio</button>
+                        <button type="button" class="btn btn-secondary" id="btnNuevaOficina"><i class="bi bi-plus-circle me-2"></i>Nueva Oficina</button>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">Gestión de Servicios</div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Servicio</th>
+                                                <th>Precio</th>
+                                                <th class="text-center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="servicios-table-body"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">Gestión de Oficinas</div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Oficina / Consultorio</th>
+                                                <th class="text-center">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="oficinas-table-body"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="usuarios" class="page">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                    <h1 class="h2">Gestión de Usuarios</h1>
+                    <button type="button" class="btn btn-primary" id="btnNuevoUsuario"><i class="bi bi-person-plus me-2"></i>Nuevo Usuario</button>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Usuario</th>
+                                        <th>Rol</th>
+                                        <th>Especialidad</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usuarios-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="reportes" class="page">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                    <h1 class="h2">Reportes and Estadísticas</h1>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">Reporte de Citas por Estado</div>
+                            <div class="card-body">
+                                <canvas id="reporteCitasChart"></canvas>
+                                <div class="mt-4 d-flex justify-content-end">
+                                    <button class="btn btn-sm btn-outline-secondary me-2" id="exportCitasPDF"><i class="bi bi-file-earmark-pdf"></i> PDF</button>
+                                    <button class="btn btn-sm btn-outline-secondary" id="exportCitasCSV"><i class="bi bi-file-earmark-spreadsheet"></i> CSV</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">Reporte de Ingresos por Servicio</div>
+                            <div class="card-body">
+                                <canvas id="reporteIngresosChart"></canvas>
+                                <div class="mt-4 d-flex justify-content-end">
+                                    <button class="btn btn-sm btn-outline-secondary me-2" id="exportIngresosPDF"><i class="bi bi-file-earmark-pdf"></i> PDF</button>
+                                    <button class="btn btn-sm btn-outline-secondary" id="exportIngresosCSV"><i class="bi bi-file-earmark-spreadsheet"></i> CSV</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-4">
+                    <div class="card-header">Citas Atendidas del Mes</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Paciente</th>
+                                        <th>Médico</th>
+                                        <th>Servicio</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportes-citas-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal fade" id="pacienteModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pacienteModalLabel"></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <form id="pacienteForm" novalidate><input type="hidden" id="pacienteId">
+                        <div class="row g-3">
+                            <div class="col-sm-6"><label class="form-label">DNI</label><input type="text" class="form-control" id="pacienteDNI" required></div>
+                            <div class="col-sm-6"><label class="form-label">Nombre</label><input type="text" class="form-control" id="pacienteNombre" required></div>
+                            <div class="col-sm-6"><label class="form-label">Apellidos</label><input type="text" class="form-control" id="pacienteApellidos" required></div>
+                            <div class="col-sm-6"><label class="form-label">Fecha Nacimiento</label><input type="date" class="form-control" id="pacienteNacimiento" required></div>
+                            <div class="col-sm-6"><label class="form-label">Género</label><select class="form-select" id="pacienteGenero" required><option value="Masculino">Masculino</option><option value="Femenino">Femenino</option></select></div>
+                            <div class="col-sm-6"><label class="form-label">Teléfono</label><input type="tel" class="form-control" id="pacienteTelefono" required></div>
+                            <div class="col-12"><label class="form-label">Correo</label><input type="email" class="form-control" id="pacienteCorreo" required></div>
+                            <div class="col-12"><label class="form-label">Dirección</label><input type="text" class="form-control" id="pacienteDireccion" required></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" form="pacienteForm" class="btn btn-primary">Guardar Paciente</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="citaModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="citaModalLabel"></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <form id="citaForm" novalidate><input type="hidden" id="citaId">
+                        <div class="mb-3"><label class="form-label">Paciente</label><select class="form-select" id="citaPaciente" required></select></div>
+                        <div class="mb-3"><label class="form-label">Servicio</label><select class="form-select" id="citaServicio" required></select></div>
+                        <div class="mb-3"><label class="form-label">Médico</label><select class="form-select" id="citaMedico" required></select></div>
+                        <div class="mb-3"><label class="form-label">Oficina</label><select class="form-select" id="citaOficina" required></select></div>
+                        <div class="row">
+                            <div class="col-6 mb-3"><label class="form-label">Fecha</label><input type="date" class="form-control" id="citaFecha" required></div>
+                            <div class="col-6 mb-3"><label class="form-label">Hora</label><input type="time" class="form-control" id="citaHora" required></div>
+                        </div>
+                        <div class="mb-3"><label class="form-label">Estado</label><select class="form-select" id="citaEstado" required><option value="Pendiente">Pendiente</option><option value="Confirmada">Confirmada</option><option value="Atendida">Atendida</option><option value="Cancelada">Cancelada</option></select></div>
+                    </form>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" form="citaForm" class="btn btn-primary">Guardar Cita</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="historialModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="historialModalLabel"></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <form id="historialForm" novalidate><input type="hidden" id="historialId">
+                        <div class="row g-3">
+                            <div class="col-md-4"><label class="form-label">Paciente</label><select class="form-select" id="historialPaciente" required></select></div>
+                            <div class="col-md-4"><label class="form-label">Médico</label><select class="form-select" id="historialMedico" required></select></div>
+                            <div class="col-md-4"><label class="form-label">Fecha</label><input type="date" class="form-control" id="historialFecha" required></div>
+                            <div class="col-12"><label class="form-label">Motivo de la Consulta</label><textarea class="form-control" id="historialMotivo" rows="2" required></textarea></div>
+                            <div class="col-12"><label class="form-label">Diagnóstico Principal</label><textarea class="form-control" id="historialDiagnostico" rows="3" required></textarea></div>
+                            <div class="col-12"><label class="form-label">Tratamiento y Receta</label><textarea class="form-control" id="historialTratamiento" rows="3"></textarea></div>
+                            <div class="col-12"><label class="form-label">Notas Adicionales</label><textarea class="form-control" id="historialNotas" rows="2"></textarea></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" form="historialForm" class="btn btn-primary">Guardar Consulta</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="servicioModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="servicioModalLabel"></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <form id="servicioForm" novalidate><input type="hidden" id="servicioId">
+                        <div class="mb-3"><label class="form-label">Nombre del Servicio</label><input type="text" class="form-control" id="servicioNombre" required></div>
+                        <div class="mb-3"><label class="form-label">Precio (S/)</label><input type="number" class="form-control" id="servicioPrecio" required step="0.01" min="0"></div>
+                    </form>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" form="servicioForm" class="btn btn-primary">Guardar Servicio</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="oficinaModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="oficinaModalLabel"></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <form id="oficinaForm" novalidate><input type="hidden" id="oficinaId">
+                        <div class="mb-3"><label class="form-label">Nombre de la Oficina / Consultorio</label><input type="text" class="form-control" id="oficinaNombre" required></div>
+                    </form>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" form="oficinaForm" class="btn btn-primary">Guardar Oficina</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="usuarioModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="usuarioModalLabel"></h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <form id="usuarioForm" novalidate><input type="hidden" id="usuarioId">
+                        <div class="row g-3">
+                            <div class="col-md-6"><label class="form-label">Nombre Completo</label><input type="text" class="form-control" id="usuarioNombre" required></div>
+                            <div class="col-md-6"><label class="form-label">Nombre de Usuario</label><input type="text" class="form-control" id="usuarioUsername" required></div>
+                            <div class="col-md-6"><label class="form-label">Contraseña</label><input type="password" class="form-control" id="usuarioPassword" placeholder="Dejar en blanco para no cambiar"></div>
+                            <div class="col-md-6"><label class="form-label">Rol</label><select class="form-select" id="usuarioRol" required><option value="doctor">Doctor</option><option value="recepcionista">Recepcionista</option><option value="admin">Admin</option></select></div>
+                            <div class="col-md-12"><label class="form-label">Especialidad (si es Doctor)</label><input type="text" class="form-control" id="usuarioEspecialidad"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" form="usuarioForm" class="btn btn-primary">Guardar Usuario</button></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Enlace al archivo JavaScript externo -->
+    <script src="script.js"></script>
+</body>
+
+</html>

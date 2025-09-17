@@ -87,6 +87,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         telefono: '912345678',
                         correo: 'juana.m@example.com',
                         direccion: 'Jr. Lima 456'
+                    }, {
+                        id: 3,
+                        dni: '87654322',
+                        nombre: 'Juan',
+                        apellidos: 'Paz Mendoza',
+                        fechaNacimiento: '1992-11-18',
+                        genero: 'Masculino',
+                        telefono: '912345677',
+                        correo: 'juan.m@example.com',
+                        direccion: 'Jr. Lima 455'
                     }, ];
                     saveToStorage('pacientes', samplePacientes);
                 }
@@ -937,4 +947,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 });
+
 

@@ -53,7 +53,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         password: '123',
                         rol: 'doctor',
                         especialidad: 'Pediatría'
-                    }, ];
+                    }, 
+                        {
+                        id: 4,
+                        nombre: 'Administrador General',
+                        username: 'mellamo',
+                        password: 'mellamo',
+                        rol: 'Administrador General',
+                        especialidad: ''
+                    },                
+                        ];
                     saveToStorage('users', sampleUsers);
                 }
                 // Repetir para los demás datos... (pacientes, servicios, etc.)
@@ -925,5 +934,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     initData();
+
 
 });

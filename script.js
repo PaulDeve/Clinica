@@ -55,12 +55,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         especialidad: 'Pediatría'
                     }, 
                         {
-                        id: 4,
+                        id: 5,
                         nombre: 'Administrador General',
                         username: 'mellamo',
                         password: 'mellamo',
                         rol: 'Administrador General',
-                        especialidad: ''
+                        especialidad: 'Administrador'
                     },                
                         ];
                     saveToStorage('users', sampleUsers);
@@ -937,3 +937,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 });
+
